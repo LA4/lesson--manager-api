@@ -29,7 +29,7 @@ describe('UserService', () => {
   });
   it('should create user', async () => {
     const newUser = {
-      email: 'tes2@test.com',
+      email: 'tes3@test.com',
       password: 'tes3t',
       firstName: 'ludo',
       lastName: 'andreotti',
@@ -63,5 +63,20 @@ describe('UserService', () => {
     const deleteUser = await service.deleteUser(userId);
     expect(deleteUser).toBeDefined();
     expect(deleteUser.firstName).toBe('andreottiUpdated');
+  });
+
+  it('should get user studients', async () => {
+    const userId = '66b335093aac8b7e8e5820c6';
+
+    const userStudent = await service.getUserStudent(userId);
+
+    console.log(userStudent);
+  });
+  it('should append studients to user', async () => {
+    const userId = '66b335093aac8b7e8e5820c6';
+    const student = 'test';
+    const studentappend = await service.appendUserStudent(userId, student);
+
+    console.log(studentappend);
   });
 });

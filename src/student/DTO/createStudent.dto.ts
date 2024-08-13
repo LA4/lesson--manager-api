@@ -1,7 +1,8 @@
-export class createStudentDto{
-    
-    fisrtName : string
-    lastName : string
-    created_at : Date
-     lessons?: Lesson
+import { Lesson } from 'src/lesson/schema/lessonschema';
+
+export class createStudentDto {
+  firstName: string;
+  lastName: string;
+  created_at: Date;
+  lessons?: Lesson;
 }

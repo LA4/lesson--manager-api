@@ -8,6 +8,6 @@ export class createUserDto {
   studentList?: Student;
 }
 export class updateUserDto {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
 }
