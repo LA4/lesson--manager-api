@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -10,6 +15,11 @@ export class UserService {
 
   // create User
   async createUser(newUser: createUserDto) {
+    const user = await this.UserModel.find({ email: newUser.email });
+
+    if (!user || user.length > 0) {
+      throw new NotFoundException('this User aleardy exist ');
+    }
     const createUser = new this.UserModel(newUser);
     return createUser.save();
   }
@@ -20,7 +30,9 @@ export class UserService {
     })
       .lean()
       .exec();
-    if (!user) {
+    console.log(user);
+
+    if (!user || user.length === 0) {
       throw new NotFoundException("this user doe's not  exist");
     }
     let { password, ...userProtected } = user[0];
@@ -29,6 +41,10 @@ export class UserService {
 
   // Update User
   async updateUser(userId: string, updateUser: updateUserDto) {
+    const user = await this.UserModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Don't find user");
+    }
     const updatedUser = await this.UserModel.findByIdAndUpdate(
       userId,
       updateUser,
@@ -39,6 +55,10 @@ export class UserService {
 
   // Delete user
   async deleteUser(userId: string) {
+    const user = await this.UserModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException("Don't find user");
+    }
     return this.UserModel.findByIdAndDelete(userId);
   }
   // append student to user
