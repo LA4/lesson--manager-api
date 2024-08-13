@@ -61,17 +61,4 @@ export class UserService {
     }
     return this.UserModel.findByIdAndDelete(userId);
   }
-  // append student to user
-  async appendUserStudent(userId: string, studentId: string) {
-    return await this.UserModel.findByIdAndUpdate(
-      userId,
-      { $addToSet: { studentList: studentId } },
-      { new: true },
-    );
-  }
-  // get User Student
-  async getUserStudent(userId: string) {
-    const userStudent = await this.UserModel.findById(userId);
-    return userStudent;
-  }
 }

@@ -15,21 +15,14 @@ export class StudentService {
   ) {}
   // create a student
   async createStudent(newStudent: createStudentDto, userId: string) {
-    const existingStudent = await this.verifyStudent(
-      newStudent.firstName,
-      newStudent.lastName,
+    const Student = new this.StudentModel(newStudent);
+    const studentSaved = await Student.save();
+    const updateUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      { $push: { studentList: studentSaved } },
+      { new: true },
     );
-    console.log('exiwtig student ?', existingStudent);
-    if (existingStudent) {
-      const Student = new this.StudentModel(newStudent);
-      const studentSaved = await Student.save();
-      const updateUser = await this.userModel.findByIdAndUpdate(
-        userId,
-        { $push: { studentList: studentSaved } },
-        { new: true },
-      );
-      return studentSaved;
-    }
+    return studentSaved;
   }
   // get a student
   async getStudent(studentId: string) {
@@ -37,30 +30,11 @@ export class StudentService {
   }
   // update a student
   async updateStudent(updateStudent: createStudentDto) {
-    const existingStudent = await this.verifyStudent(
-      updateStudent.firstName,
-      updateStudent.lastName,
-    );
-    if (!existingStudent) {
-      throw new NotFoundException('Student not found');
-    }
     const updatedStudent = await this.StudentModel.findByIdAndUpdate(
       { lastName: updateStudent.lastName },
       updateStudent,
       { new: true },
     );
     return updatedStudent;
-  }
-
-  async verifyStudent(firstName: string, lastName: string) {
-    const student = await this.StudentModel.find({
-      firstName,
-      lastName,
-    }).exec();
-
-    if (student.length < 0) {
-      throw new NotFoundException('Student already exist');
-    }
-    return true;
   }
 }
